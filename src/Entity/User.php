@@ -2,14 +2,21 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ApiResource()
+ * @UniqueEntity("email", message="Un utilisateur ayant cette adresse email existe deja")
  */
 class User implements UserInterface
 {
@@ -17,11 +24,15 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"customers_reads", "invoices_subresource"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string",length=180, unique=true)
+     * @Groups({"customers_reads"})
+     * @Assert\NotBlank(message="L'email doit etre renseigné.")
+     * @Assert\Email(message="L'adresse email doit etre valide.")
      */
     private $email;
 
@@ -33,18 +44,25 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Le mot de passe doit etre obligatoire.")
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string",length=255)
+     * @Groups({"customers_reads"})
+     * @Assert\NotBlank(message="Le prenom est obligatoire.")
+     * @Assert\Length(min=2, minMessage="Le prenom doit etre entre 2 et 255 carateres.", max=255, maxMessage="Le prenom doit etre entre 2 et 255 carateres.")
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string",length=255)
+     * @Groups({"customers_reads"})
+     * @Assert\NotBlank(message="Le nom de famille est obligatoire.")
+     * @Assert\Length(min=2, minMessage="Le nom de famille doit etre entre 2 et 255 carateres.", max=255, maxMessage="Le nom de famille doit etre entre 2 et 255 carateres.")
      */
-    private $LastName;
+    private $lastName;
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="user")
@@ -80,7 +98,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -107,7 +125,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string)$this->password;
     }
 
     public function setPassword(string $password): self
@@ -148,12 +166,12 @@ class User implements UserInterface
 
     public function getLastName(): ?string
     {
-        return $this->LastName;
+        return $this->lastName;
     }
 
-    public function setLastName(string $LastName): self
+    public function setLastName(string $lastName): self
     {
-        $this->LastName = $LastName;
+        $this->lastName = $lastName;
 
         return $this;
     }
