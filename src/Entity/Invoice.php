@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     paginationItemsPerPage=20,
  *     order={"sentAt": "desc"},
  *     subresourceOperations={
- *          "api_customers_invoices_get_subresource": {
+ *          "api_customers_invoices_get_subresource"={
  *              "normalization_context"={"groups"={"invoices_subresource"}}
  *          }
  *     },
@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "disable_type_enforcement"=true
  *     }
  * )
- * @ApiFilter(OrderFilter::class,properties={"amount":"desc"})
+ * @ApiFilter(OrderFilter::class, properties={"amount","sentAt"})
  */
 class Invoice
 {
@@ -54,23 +54,23 @@ class Invoice
      * @ORM\Column(type="float")
      * @Groups({"invoices_read","customers_read","invoices_subresource"})
      * @Assert\NotBlank(message="Le montant de la facture est obligatoire.")
-     * @Assert\Type(type="numeric", message="Le montant de la facture doit etre numerique.")
+     * @Assert\Type(type="numeric", message="Le montant de la facture doit être un numérique.")
      */
     private $amount;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"invoices_read","customers_read"})
-     * @Assert\NotBlank(message="La statut de la facture est obligatoire.")
-     * @Assert\Choice(choices={"SENT", "PAID", "CANCELLED"}, message="Le status doit etre SENT, PAID ou CANCELLED.")
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
+     * @Assert\NotBlank(message="Le statut de la facture est obligatoire.")
+     * @Assert\Choice(choices={"SENT", "PAID", "CANCELLED"}, message="Le statut doit être SENT, PAID ou CANCELLED.")
      */
     private $status;
 
     /**
      * @ORM\Column(type="datetime")
      * @Groups({"invoices_read","customers_read","invoices_subresource"})
-     * @Assert\Type("\DateTime", message="La date doit etre au format YYYY-MM-DD")
-     * @Assert\NotBlank(message="La date d'envoi doit etre renseigné.")
+     * @Assert\Type("\DateTime", message="La date doit être au format YYYY-MM-DD")
+     * @Assert\NotBlank(message="La date d'envoi doit être renseignée.")
      */
     private $sentAt;
 
@@ -78,21 +78,21 @@ class Invoice
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="invoices")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"invoices_read"})
-     * @Assert\NotBlank(message="Le client de la facture doit etre renseigné.")
+     * @Assert\NotBlank(message="Le client de la facture doit être renseigné.")
      */
     private $customer;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"invoices_read","customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      * @Assert\NotBlank(message="Il faut absolument un chrono pour la facture.")
-     * @Assert\Type(type="integer", message="Le chrono doit etre un nombre." )
+     * @Assert\Type(type="integer", message="Le chrono doit être un nombre." )
      */
     private $chrono;
 
     /**
-     * Permet de recuperer le user a qui appartient la facture
-     * @Groups({"invoices_read"})
+     * Permet de récupérer le user a qui appartient la facture
+     * @Groups({"invoices_read", "invoices_subresource"})
      * @return User
      */
     public function getUser(): User

@@ -16,9 +16,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups": {"users_read"}}
+ *     normalizationContext={"groups"={"users_read"}}
  * )
- * @UniqueEntity("email", message="Un utilisateur ayant cette adresse email existe deja")
+ * @UniqueEntity("email", message="Un utilisateur ayant cette adresse email existe déjà")
  */
 class User implements UserInterface
 {
@@ -26,15 +26,15 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customers_reads", "invoices_subresource", "users_read"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string",length=180, unique=true)
-     * @Groups({"customers_reads", "users_read"})
-     * @Assert\NotBlank(message="L'email doit etre renseigné.")
-     * @Assert\Email(message="L'adresse email doit etre valide.")
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
+     * @Assert\NotBlank(message="L'email doit être renseigné.")
+     * @Assert\Email(message="L'adresse email doit être valide.")
      */
     private $email;
 
@@ -46,23 +46,23 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="Le mot de passe doit etre obligatoire.")
+     * @Assert\NotBlank(message="Le mot de passe doit être obligatoire.")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string",length=255)
-     * @Groups({"customers_reads", "users_read"})
-     * @Assert\NotBlank(message="Le prenom est obligatoire.")
-     * @Assert\Length(min=2, minMessage="Le prenom doit etre entre 2 et 255 carateres.", max=255, maxMessage="Le prenom doit etre entre 2 et 255 carateres.")
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
+     * @Assert\NotBlank(message="Le prénom est obligatoire.")
+     * @Assert\Length(min=2, minMessage="Le prénom doit être entre 2 et 255 caractères.", max=255, maxMessage="Le prénom doit être entre 2 et 255 caractères.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string",length=255)
-     * @Groups({"customers_reads", "users_read"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
      * @Assert\NotBlank(message="Le nom de famille est obligatoire.")
-     * @Assert\Length(min=2, minMessage="Le nom de famille doit etre entre 2 et 255 carateres.", max=255, maxMessage="Le nom de famille doit etre entre 2 et 255 carateres.")
+     * @Assert\Length(min=2, minMessage="Le nom de famille doit être entre 2 et 255 caractères.", max=255, maxMessage="Le nom de famille doit être entre 2 et 255 caractères.")
      */
     private $lastName;
 

@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "groups"={"customers_read"}
  *     }
  * )
- * @ApiFilter(SearchFilter::class, properties={"firstName":"partial", "lastName":"partial","company":"partial"})
+ * @ApiFilter(SearchFilter::class)
  * @ApiFilter(OrderFilter::class)
  */
 class Customer
@@ -42,24 +42,24 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
-     * @Assert\NotBlank(message="le prenom du customer est obligatoire")
-     * @Assert\Length(min=2, minMessage="Le prenom doit faire entre 3 et 255 caracteres.", max=255, maxMessage="Le prenom doit faire entre 3 et 255 caracteres.")
+     * @Assert\NotBlank(message="Le prénom du customer est obligatoire")
+     * @Assert\Length(min=2, minMessage="Le prénom doit faire entre 3 et 255 caractères.", max=255, maxMessage="Le prénom doit faire entre 3 et 255 caractères.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
-     * @Assert\NotBlank(message="le nom du customer est obligatoire")
-     * @Assert\Length(min=2, minMessage="Le nom doit faire entre 3 et 255 caracteres.", max=255, maxMessage="Le nom doit faire entre 3 et 255 caracteres.")
+     * @Assert\NotBlank(message="Le nom du customer est obligatoire")
+     * @Assert\Length(min=2, minMessage="Le nom doit faire entre 3 et 255 caractères.", max=255, maxMessage="Le nom doit faire entre 3 et 255 caractères.")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
-     * @Assert\NotBlank(message="l'adresse email du customer est obligatoire")
-     * @Assert\Email(message="Le format de l'adresse email doit etre valide.")
+     * @Assert\NotBlank(message="L'adresse email du customer est obligatoire")
+     * @Assert\Email(message="Le format de l'adresse email doit être valide.")
      */
     private $email;
 
@@ -79,7 +79,7 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @Groups({"customers_read"})
-     * @Assert\NotBlank(message="L'utilisateur est obligatoire est obligatoire")
+     * @Assert\NotBlank(message="L'utilisateur est obligatoire")
      */
     private $user;
 
@@ -101,7 +101,7 @@ class Customer
     }
 
     /**
-     * Récupérer le montant total non paye (montant total hors factures payees ou annulées)
+     * Récupérer le montant total non payé (montant total hors factures payées ou annulées)
      * @Groups({"customers_read"})
      * @return float
      */
