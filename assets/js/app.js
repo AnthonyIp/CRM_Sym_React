@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import NavBar from "./components/navbar/navbar.component";
-import HomePage from "./pages/HomePage.component";
-import {HashRouter, Switch, Route} from "react-router-dom";
+import {HashRouter, Route, Switch} from "react-router-dom";
 
-import '../css/bootstrap.min.css';
 import '../css/app.css';
+import '../css/bootstrap.min.css';
+
+import NavBar from "./components/navbar/navbar.component";
 import CustomersPage from "./pages/CustomersPage.component";
+import HomePage from "./pages/HomePage.component";
+import InvoicesPage from "./pages/InvoicesPage.component";
 
 const App = () => {
     return (
@@ -14,8 +16,9 @@ const App = () => {
             <NavBar/>
             <main className="container pt-5">
                 <Switch>
-                    <HomePage exact path="/" component={HomePage}/>
-                    <CustomersPage path="/customers" component={CustomersPage}/>
+                    <Route exact path="/" component={HomePage}/>
+                    <Route path="/customers" component={CustomersPage}/>
+                    <Route path="/invoices" component={InvoicesPage}/>
                 </Switch>
             </main>
         </HashRouter>

@@ -1,76 +1,49 @@
 import React, {useEffect, useState} from 'react';
-
+import axios from "axios";
 import Pagination from "../components/pagination/pagination.component";
 
-import CustomersApi from '../services/customersApi';
-
-const CustomersPage = (props) => {
-
+const CustomersPageWithPagination = () => {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState('');
+    const [totalItems, setTotalItems] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const itemsPerPage = 10;
 
-    /*Permet de récupérer la liste des customers*/
-    const fetchCustomers = async () => {
-        try {
-            const data = await CustomersApi.findAll();
-            await setCustomers(data);
-        } catch (error) {
-            console.error(error.response);
-        }
-    }
-
-    /*Au chargement, exécuter l'action*/
     useEffect(() => {
-        fetchCustomers();
-    }, []);
+        axios
+            .get(`/api/customers?pagination=true&count=${itemsPerPage}&page=${currentPage}`)
+            .then(res => {
+                setCustomers(res.data['hydra:member']);
+                setTotalItems(res.data['hydra:totalItems']);
+                setLoading(false);
+            })
+            .catch(error => console.log(error.response));
+    }, [currentPage]);
 
-    /*Gestion de la suppression du client*/
-    const handleDelete = async (id) => {
+    const handleDelete = (id) => {
         /*Copie de la liste original*/
         const originalCustomers = [...customers];
         /*On enlève la ligne a supprimée */
         setCustomers(customers.filter(customer => customer.id !== id));
         /*On supprime depuis la bdd et si il y a une erreur on remet l'ancienne liste*/
-        try {
-            await CustomersApi.deleteById(id)
-        } catch (error) {
-            setCustomers(originalCustomers);
-            console.error(error.response)
-        }
+        axios
+            .delete('http://localhost:8000/api/customers/' + id)
+            .then((res) => console.log('ok'))
+            .catch(error => {
+                setCustomers(originalCustomers);
+                console.log(error.response)
+            });
+
     }
 
-    /*Gestion du changement de page*/
     const handlePageChange = (page) => {
+        setLoading(true);
         setCurrentPage(page);
     }
 
-    /*Gestion de la recherche*/
-    const handleSearch = ({currentTarget}) => {
-        setSearch(currentTarget.value);
-        setCurrentPage(1);
-    }
-    /*Filtrage des customers en fonction de la recherche*/
-    const filteredCustomers = customers.filter(customer =>
-        customer.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        customer.lastName.toLowerCase().includes(search.toLowerCase()) ||
-        customer.email.toLowerCase().includes(search.toLowerCase()) ||
-        (customer.company && customer.company.toLowerCase().includes(search.toLowerCase()))
-    );
-
-    const itemsPerPage = 10;
-    /*Pagination des données*/
-    const paginationCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
-
     return (
-        <div className="customers-page">
-            <h1 className="mb-5">Liste des clients</h1>
-
-            <div className="form-group">
-                <input type="text" className="form-control"
-                       placeholder="Rechercher avec son nom de famille ou prenom ou email" onChange={handleSearch}/>
-            </div>
-
+        <div className="customers-page-with-pagination">
+            <h1>Liste des clients (pagination)</h1>
             <table className="table table-hover">
                 <thead>
                 <tr>
@@ -85,7 +58,14 @@ const CustomersPage = (props) => {
                 </thead>
                 <tbody>
                 {
-                    paginationCustomers.map(customer => {
+                    loading && (
+                        <tr>
+                            <td>Chargement...</td>
+                        </tr>
+                    )
+                }
+                {
+                    !loading && customers.map(customer => {
                         return (
                             <tr key={customer.id}>
                                 <td>{customer.id}</td>
@@ -110,13 +90,9 @@ const CustomersPage = (props) => {
                 </tbody>
             </table>
 
-            {itemsPerPage < filteredCustomers.length && (
-                <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredCustomers.length}
-                            onPageChanged={handlePageChange}/>
-            )}
-
+            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={totalItems} onPageChanged={handlePageChange}/>
         </div>
     );
 };
 
-export default CustomersPage;
+export default CustomersPageWithPagination;
