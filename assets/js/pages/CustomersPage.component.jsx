@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
-
 import Pagination from "../components/pagination/pagination.component";
-
 import CustomersApi from '../services/customersApi';
 
 const CustomersPage = (props) => {
