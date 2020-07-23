@@ -53,16 +53,16 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string",length=255)
      * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
-     * @Assert\NotBlank(message="Le prénom est obligatoire.")
      * @Assert\Length(min=2, minMessage="Le prénom doit être entre 2 et 255 caractères.", max=255, maxMessage="Le prénom doit être entre 2 et 255 caractères.")
+     * @Assert\NotBlank(message="Le prénom est obligatoire.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string",length=255)
      * @Groups({"customers_read", "invoices_read", "invoices_subresource", "users_read"})
-     * @Assert\NotBlank(message="Le nom de famille est obligatoire.")
      * @Assert\Length(min=2, minMessage="Le nom de famille doit être entre 2 et 255 caractères.", max=255, maxMessage="Le nom de famille doit être entre 2 et 255 caractères.")
+     * @Assert\NotBlank(message="Le nom de famille est obligatoire.")
      */
     private $lastName;
 

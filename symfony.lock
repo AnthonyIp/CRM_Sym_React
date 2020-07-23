@@ -122,6 +122,15 @@
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
+    "laminas/laminas-code": {
+        "version": "3.4.1"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.2.1"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.0.4"
+    },
     "lcobucci/jwt": {
         "version": "3.3.2"
     },
@@ -388,7 +397,7 @@
         "version": "v5.1.2"
     },
     "symfony/orm-pack": {
-        "version": "v1.1.0"
+        "version": "v2.0.0"
     },
     "symfony/phpunit-bridge": {
         "version": "4.3",
@@ -593,6 +602,9 @@
     },
     "twig/twig": {
         "version": "v3.0.4"
+    },
+    "webimpress/safe-writer": {
+        "version": "2.0.1"
     },
     "webmozart/assert": {
         "version": "1.9.1"

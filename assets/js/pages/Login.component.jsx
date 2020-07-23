@@ -1,4 +1,5 @@
 import React, {useContext, useState} from 'react';
+import Field from "../components/field/field.component";
 import AuthContext from "../contexts/AuthContext";
 import AuthAPI from "../services/authApi";
 
@@ -31,26 +32,24 @@ const LoginPage = ({history}) => {
         <div className={`login-page`}>
             <h1>Connexion</h1>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Adresse email</label>
-                    <input type="email" className={"form-control" + (error && " is-invalid")} name={`username`}
-                           id="username"
-                           placeholder="Veuillez entrer votre adresse email"
-                           value={credentials.username} onChange={handleCredentials}
-                    />
-                    {
-                        error && <p className="invalid-feedback">
-                            {error}
-                        </p>
-                    }
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Mot de passe</label>
-                    <input type="password" className="form-control" name={`password`} id="password"
-                           placeholder="Veuillez entrer votre mot de passe"
-                           value={credentials.password} onChange={handleCredentials}
-                    />
-                </div>
+                <Field
+                    label={`Adresse email`}
+                    name={`username`}
+                    type={`email`}
+                    placeholder={`Veuillez entrer votre adresse email`}
+                    value={credentials.username}
+                    onChange={handleCredentials}
+                    error={error}
+                />
+                <Field
+                    label={`Mot de passe`}
+                    name={`password`}
+                    type={`password`}
+                    placeholder={`Veuillez entrer votre mot de passe`}
+                    value={credentials.password}
+                    onChange={handleCredentials}
+                    error=''
+                />
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">Connexion</button>
                 </div>
