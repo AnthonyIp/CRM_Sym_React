@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {toast} from "react-toastify";
 import Field from "../components/field/field.component";
+import FormContentLoader from "../components/form-content-loader/form-content-loader.component";
 import Select from "../components/select/select.component";
 import CustomersAPI from "../services/customersApi";
 import InvoicesAPI from "../services/invoicesApi";

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import {LOGIN_API} from "../config";
 import CustomersApi from './customersApi';
 
 /**
@@ -32,7 +33,7 @@ function logout() {
 /* Authentification de l'utilisateur et mise en place du token dans le localeStorage */
 function authenticate(credentials) {
     return axios
-        .post('/api/login_check', credentials)
+        .post(LOGIN_API, credentials)
         .then(response => response.data.token)
         .then(token => {
             /*je stock le token dans le localstorage*/
